@@ -11,6 +11,19 @@ provider "aws" {
   region = var.aws_region
 }
 
+data "aws_caller_identity" "current" {}
+
+locals {
+  account_id  = data.aws_caller_identity.current.account_id
+  environment = "dev"
+}
+
+locals {
+  default_tags = {
+    Environment = local.environment
+  }
+}
+
 module "vpc" {
   source = "../../modules/vpc"
 
@@ -20,9 +33,14 @@ module "vpc" {
   private_subnet_cidr_blocks = var.private_subnet_cidr_blocks
 }
 
-# java-maven-app
+# java-maven-app docker image
 module "ecr" {
   source = "../../modules/ecr"
 
   ecr_repository_name = var.ecr_repository_name
 }
+
+# WIP
+# module "eks" {
+#   source = "../../modules/eks"
+# }

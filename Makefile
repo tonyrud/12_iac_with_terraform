@@ -11,4 +11,7 @@ terraform_plan: terraform_init
 terraform_apply: terraform_init
 	cd $(DIR); terraform apply
 
+terraform_destroy:
+	cd $(DIR); terraform destroy
+
 terraform: terraform_apply 
