@@ -3,12 +3,12 @@ module "eks" {
   version = "20.8.5"
 
   cluster_name                             = "myapp-eks-cluster"
-  cluster_version                          = "1.27"
+  cluster_version                          = "1.30"
   cluster_endpoint_public_access           = true
   enable_cluster_creator_admin_permissions = true
 
-  subnet_ids = module.myapp-vpc.private_subnets
-  vpc_id     = module.myapp-vpc.vpc_id
+  subnet_ids = module.vpc.private_subnets
+  vpc_id     = module.vpc.vpc_id
 
   eks_managed_node_groups = {
     # ec2 name will be the key value

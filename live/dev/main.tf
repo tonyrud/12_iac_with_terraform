@@ -19,3 +19,10 @@ module "vpc" {
   public_subnet_cidr_blocks  = var.public_subnet_cidr_blocks
   private_subnet_cidr_blocks = var.private_subnet_cidr_blocks
 }
+
+# java-maven-app
+module "ecr" {
+  source = "../../modules/ecr"
+
+  ecr_repository_name = var.ecr_repository_name
+}

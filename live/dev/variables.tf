@@ -22,3 +22,8 @@ variable "public_subnet_cidr_blocks" {
   description = "Default value for public subnet CIDR blocks"
   type        = list(string)
 }
+
+variable "ecr_repository_name" {
+  description = "Name of the ECR repository"
+  type        = string
+}
