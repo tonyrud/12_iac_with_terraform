@@ -14,8 +14,8 @@ module "eks" {
     # ec2 name will be the key value
     dev = {
       min_size     = 1
-      max_size     = 3
-      desired_size = 3
+      max_size     = 2
+      desired_size = 1
 
       instance_types = ["t2.small"]
       # capacity_type  = "SPOT"
