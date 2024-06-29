@@ -28,6 +28,7 @@ module "myapp-vpc" {
 
   tags = {
     "kubernets.io/cluster/myapp-eks-cluster" = "shared"
+    "terraform"                              = "true"
   }
 
   public_subnet_tags = {
