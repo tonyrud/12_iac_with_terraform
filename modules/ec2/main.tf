@@ -1,15 +1,4 @@
 
-variable "my_ip" {}
-
-variable "ec2_instance_type" {
-  description = "Instance type for EC2 instances"
-  type        = string
-  default     = "t2.micro"
-}
-
-variable "public_key_location" {}
-variable "vpc_id" {}
-
 locals {
   name   = "${basename(path.cwd)}"
 
@@ -18,7 +7,7 @@ locals {
   }
 }
 
-# ! NOTE: this uses the default security group alredy created by VPN module !
+# ! NOTE: this uses the default security group alredy created by VPC module !
 resource "aws_default_security_group" "default-sg" {
   vpc_id = var.vpc_id
 
@@ -86,10 +75,6 @@ data "aws_subnets" "public_subnets" {
 
 data "aws_availability_zones" "available" {
   state = "available"
-}
-
-output "public_ip" {
-  value = aws_instance.app.public_ip
 }
 
 resource "aws_instance" "app" {

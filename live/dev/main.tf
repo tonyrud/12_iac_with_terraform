@@ -40,13 +40,13 @@ module "ecr" {
   ecr_repository_name = "java-maven-app"
 }
 
-module "ec2" {
-  source = "../../modules/ec2"
+# module "ec2" {
+#   source = "../../modules/ec2"
 
-  my_ip               = var.my_ip
-  public_key_location = var.public_key_location
-  vpc_id              = module.vpc.vpc_id
-}
+#   my_ip               = var.my_ip
+#   public_key_location = var.public_key_location
+#   vpc_id              = module.vpc.vpc_id
+# }
 
 # WIP
 # module "eks" {
