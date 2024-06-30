@@ -1,24 +1,16 @@
-provider "aws" {
-  region = "us-east-2"
-}
-variable "vpc_cidr_block" {}
-variable "private_subnet_cidr_blocks" {}
-variable "public_subnet_cidr_blocks" {}
-
 data "aws_availability_zones" "azs" {
   state = "available"
-
 }
 
-module "myapp-vpc" {
+module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.8.0"
 
-  name = "myapp-vpc"
-  cidr = var.vpc_cidr_block
-
+  name = var.vpc_name
+  cidr = var.vpc_cidr
   private_subnets = var.private_subnet_cidr_blocks
   public_subnets  = var.public_subnet_cidr_blocks
+
 
   azs = data.aws_availability_zones.azs.names
 
