@@ -24,7 +24,5 @@ variable "public_subnet_cidr_blocks" {
   type        = list(string)
 }
 
-variable "ecr_repository_name" {
-  description = "Name of the ECR repository"
-  type        = string
-}
+variable "my_ip" {}
+variable "public_key_location" {}
