@@ -52,9 +52,9 @@ module "ec2" {
 }
 
 module "eks" {
-  count        = var.create_eks ? 1 : 0
-  source       = "../../modules/eks"
-  cluster_name = "${var.vpc_name}-cluster"
-  vpc_id       = module.vpc.vpc_id
+  count           = var.create_eks ? 1 : 0
+  source          = "../../modules/eks"
+  cluster_name    = "${var.vpc_name}-cluster"
+  vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
 }
