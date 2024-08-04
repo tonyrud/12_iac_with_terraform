@@ -8,3 +8,4 @@ variable "ec2_instance_type" {
 
 variable "public_key_location" {}
 variable "vpc_id" {}
+variable "public_subnets" {}

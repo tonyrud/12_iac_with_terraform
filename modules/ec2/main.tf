@@ -49,29 +49,6 @@ data "aws_ami" "latest-amazon-linux-image" {
   }
 }
 
-data "aws_subnets" "private_subnets" {
-  filter {
-    name   = "vpc-id"
-    values = [var.vpc_id]
-  }
-
-  filter {
-    name   = "tag:Name"
-    values = ["dev-private*"]
-  }
-}
-
-data "aws_subnets" "public_subnets" {
-  filter {
-    name   = "vpc-id"
-    values = [var.vpc_id]
-  }
-
-  filter {
-    name   = "tag:Name"
-    values = ["dev-public*"]
-  }
-}
 
 data "aws_availability_zones" "available" {
   state = "available"
@@ -81,7 +58,7 @@ resource "aws_instance" "app" {
   ami           = data.aws_ami.latest-amazon-linux-image.id
   instance_type = var.ec2_instance_type
 
-  subnet_id                = data.aws_subnets.public_subnets.ids[0]
+  subnet_id                = var.public_subnets.ids[0]
   vpc_security_group_ids = [aws_default_security_group.default-sg.id]
   availability_zone      = data.aws_availability_zones.available.names[0]
 
