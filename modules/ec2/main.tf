@@ -58,7 +58,7 @@ resource "aws_instance" "app" {
   ami           = data.aws_ami.latest-amazon-linux-image.id
   instance_type = var.ec2_instance_type
 
-  subnet_id                = var.public_subnets.ids[0]
+  subnet_id                = var.public_subnets[0]
   vpc_security_group_ids = [aws_default_security_group.default-sg.id]
   availability_zone      = data.aws_availability_zones.available.names[0]
 

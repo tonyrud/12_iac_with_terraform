@@ -56,6 +56,5 @@ module "eks" {
   source       = "../../modules/eks"
   cluster_name = "${var.vpc_name}-cluster"
   vpc_id       = module.vpc.vpc_id
-  # private_subnets = module.vpc.private_subnets
   private_subnets = module.vpc.private_subnets
 }
