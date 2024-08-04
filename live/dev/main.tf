@@ -33,26 +33,26 @@ module "vpc" {
   private_subnet_cidr_blocks = var.private_subnet_cidr_blocks
 }
 
-# java-maven-app docker image
 module "ecr" {
-  count  = var.create_ecr ? 1 : 0
+  count  = length(var.ecr_names)
   source = "../../modules/ecr"
 
-  ecr_repository_name = "${var.vpc_name}-java-maven-app"
+  ecr_repository_name = var.ecr_names[count.index]
 }
 
 module "ec2" {
-  count  = var.create_ec2 ? 1 : 0
+  count  = length(var.instance_names)
   source = "../../modules/ec2"
 
   my_ip               = var.my_ip
   public_key_location = var.public_key_location
   public_subnets      = module.vpc.public_subnets
   vpc_id              = module.vpc.vpc_id
+  instance_name       = var.instance_names[count.index]
 }
 
 module "eks" {
-  count           = var.create_eks ? 1 : 0
+  count           = var.create_k8s_cluster ? 1 : 0
   source          = "../../modules/eks"
   cluster_name    = "${var.vpc_name}-cluster"
   vpc_id          = module.vpc.vpc_id

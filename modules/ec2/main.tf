@@ -1,6 +1,6 @@
 
 locals {
-  name   = "${basename(path.cwd)}"
+  name   = var.instance_name
 
   tags = {
     Name       = local.name
