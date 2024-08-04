@@ -20,8 +20,4 @@ module "eks" {
       instance_types = ["t2.micro"]
     }
   }
-
-  tags = {
-    application = "myapp"
-  }
 }
