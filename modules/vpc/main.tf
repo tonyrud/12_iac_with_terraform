@@ -2,6 +2,31 @@ data "aws_availability_zones" "azs" {
   state = "available"
 }
 
+# terraform state show module.vpc.data.aws_subnets.private_subnets
+data "aws_subnets" "private_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [module.vpc.vpc_id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["${var.vpc_name}-private*"]
+  }
+}
+
+data "aws_subnets" "public_subnets" {
+  filter {
+    name   = "vpc-id"
+    values = [module.vpc.vpc_id]
+  }
+
+  filter {
+    name   = "tag:Name"
+    values = ["${var.vpc_name}-public*"]
+  }
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "5.8.0"

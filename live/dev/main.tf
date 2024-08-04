@@ -20,6 +20,40 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+# ! NOTE: this uses the default security group alredy created by VPC module !
+resource "aws_default_security_group" "default-sg" {
+  vpc_id = module.vpc.vpc_id
+
+  # open port 22 for ssh access from my IP
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip]
+  }
+
+  # open port 8080 for testing
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+    prefix_list_ids = []
+  }
+}
+
+resource "aws_key_pair" "ssh-key" {
+  key_name   = "server-key"
+  public_key = file(var.public_key_location)
+}
+
 locals {
   account_id = data.aws_caller_identity.current.account_id
 }
@@ -33,22 +67,27 @@ module "vpc" {
   private_subnet_cidr_blocks = var.private_subnet_cidr_blocks
 }
 
-# java-maven-app docker image
 module "ecr" {
+  count  = length(var.ecr_names)
   source = "../../modules/ecr"
 
-  ecr_repository_name = "java-maven-app"
+  ecr_repository_name = var.ecr_names[count.index]
 }
 
-# module "ec2" {
-#   source = "../../modules/ec2"
+module "ec2" {
+  for_each = toset(var.instance_names)
+  source   = "../../modules/ec2"
 
-#   my_ip               = var.my_ip
-#   public_key_location = var.public_key_location
-#   vpc_id              = module.vpc.vpc_id
-# }
+  public_subnets = module.vpc.public_subnets
+  default_sg     = aws_default_security_group.default-sg
+  ssh_key_name   = aws_key_pair.ssh-key.key_name
+  instance_name  = each.value
+}
 
-# WIP
-# module "eks" {
-#   source = "../../modules/eks"
-# }
+module "eks" {
+  count           = var.create_k8s_cluster ? 1 : 0
+  source          = "../../modules/eks"
+  cluster_name    = "${var.vpc_name}-cluster"
+  vpc_id          = module.vpc.vpc_id
+  private_subnets = module.vpc.private_subnets
+}

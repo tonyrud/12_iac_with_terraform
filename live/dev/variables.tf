@@ -26,3 +26,20 @@ variable "public_subnet_cidr_blocks" {
 
 variable "my_ip" {}
 variable "public_key_location" {}
+
+variable "create_k8s_cluster" {
+  type = bool
+}
+
+variable "instance_names" {
+  description = "Create EC2 instances with these names"
+  type        = list(string)
+  default     = []
+}
+
+variable "ecr_names" {
+  description = "Create ECR with these names"
+  type        = list(string)
+  default     = []
+}
+
