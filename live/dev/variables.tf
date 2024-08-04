@@ -26,3 +26,15 @@ variable "public_subnet_cidr_blocks" {
 
 variable "my_ip" {}
 variable "public_key_location" {}
+
+variable "create_ecr" {
+  type = bool
+}
+
+variable "create_eks" {
+  type = bool
+}
+
+variable "create_ec2" {
+  type = bool
+}
