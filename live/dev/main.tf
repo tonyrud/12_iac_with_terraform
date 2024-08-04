@@ -20,6 +20,40 @@ provider "aws" {
 
 data "aws_caller_identity" "current" {}
 
+# ! NOTE: this uses the default security group alredy created by VPC module !
+resource "aws_default_security_group" "default-sg" {
+  vpc_id = module.vpc.vpc_id
+
+  # open port 22 for ssh access from my IP
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = [var.my_ip]
+  }
+
+  # open port 8080 for testing
+  ingress {
+    from_port   = 8080
+    to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
+    cidr_blocks     = ["0.0.0.0/0"]
+    prefix_list_ids = []
+  }
+}
+
+resource "aws_key_pair" "ssh-key" {
+  key_name   = "server-key"
+  public_key = file(var.public_key_location)
+}
+
 locals {
   account_id = data.aws_caller_identity.current.account_id
 }
@@ -41,14 +75,13 @@ module "ecr" {
 }
 
 module "ec2" {
-  count  = length(var.instance_names)
-  source = "../../modules/ec2"
+  for_each = toset(var.instance_names)
+  source   = "../../modules/ec2"
 
-  my_ip               = var.my_ip
-  public_key_location = var.public_key_location
-  public_subnets      = module.vpc.public_subnets
-  vpc_id              = module.vpc.vpc_id
-  instance_name       = var.instance_names[count.index]
+  public_subnets = module.vpc.public_subnets
+  default_sg     = aws_default_security_group.default-sg
+  ssh_key_name   = aws_key_pair.ssh-key.key_name
+  instance_name  = each.value
 }
 
 module "eks" {
