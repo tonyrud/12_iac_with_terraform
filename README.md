@@ -13,3 +13,8 @@ make terraform_apply ENV=dev
 ```make
 make terraform_destroy ENV=dev
 ```
+
+## TODO
+
+- make easier to deploy in different regions. Dir structure matches regions
+- use dir name for env deployed..ie `/live/dev` is "dev" environment

@@ -7,13 +7,22 @@ terraform {
   }
 }
 
+locals {
+  provisioning_dir = replace(
+    abspath(path.root),
+    "/.+?(live.*)/",
+    "$1"
+  )
+}
+
 provider "aws" {
   region = var.aws_region
   default_tags {
     tags = {
-      Owner       = "Terraform"
-      Environment = "dev"
-      Repository  = "https://github.com/tonyrud/terraform-learn.git"
+      Owner            = "Terraform"
+      Environment      = "dev"
+      ProvisionFromDir = local.provisioning_dir
+      Repository       = "https://github.com/tonyrud/terraform-learn.git"
     }
   }
 }
@@ -32,7 +41,7 @@ resource "aws_default_security_group" "default-sg" {
     cidr_blocks = [var.my_ip]
   }
 
-  # open port 8080 for testing
+  # open port 8080 for the app
   ingress {
     from_port   = 8080
     to_port     = 8080
