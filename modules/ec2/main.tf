@@ -20,13 +20,28 @@ data "aws_ami" "latest-amazon-linux-image" {
   }
 }
 
+data "aws_ami" "latest-ubuntu-image" {
+  most_recent = true
+  owners      = ["amazon"]
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
 
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 resource "aws_instance" "app" {
-  ami           = data.aws_ami.latest-amazon-linux-image.id
+  # TODO: if/else for AMI
+  ami           = data.aws_ami.latest-ubuntu-image.id
+  # ami           = data.aws_ami.latest-amazon-linux-image.id
   instance_type = var.ec2_instance_type
 
   subnet_id                = var.public_subnets[0]
