@@ -84,13 +84,17 @@ module "ecr" {
 }
 
 module "ec2" {
-  for_each = toset(var.instance_names)
+  for_each = { for each in var.ec2s : each.name => each }
   source   = "../../modules/ec2"
 
   public_subnets = module.vpc.public_subnets
   default_sg     = aws_default_security_group.default-sg
   ssh_key_name   = aws_key_pair.ssh-key.key_name
-  instance_name  = each.value
+
+  # usage of tfvars list of objects
+  instance_name    = each.value.name
+  image            = each.value.image
+  use_entry_script = each.value.use_entry_script
 }
 
 module "eks" {

@@ -8,3 +8,5 @@ variable "default_sg" {}
 variable "instance_name" {}
 variable "ssh_key_name" {}
 variable "public_subnets" {}
+variable "image" {}
+variable "use_entry_script" {}

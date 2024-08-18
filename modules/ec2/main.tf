@@ -7,41 +7,25 @@ locals {
   }
 }
 
-data "aws_ami" "latest-amazon-linux-image" {
+data "aws_ami" "image" {
   most_recent = true
   owners      = ["amazon"]
   filter {
     name   = "name"
-    values = ["amzn2-ami-kernel-*-x86_64-gp2"]
+    values = [var.image]
   }
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
 }
-
-data "aws_ami" "latest-ubuntu-image" {
-  most_recent = true
-  owners      = ["amazon"]
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-*"]
-  }
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
 
 data "aws_availability_zones" "available" {
   state = "available"
 }
 
 resource "aws_instance" "app" {
-  # TODO: if/else for AMI
-  ami           = data.aws_ami.latest-ubuntu-image.id
-  # ami           = data.aws_ami.latest-amazon-linux-image.id
+  ami           = data.aws_ami.image.id
   instance_type = var.ec2_instance_type
 
   subnet_id                = var.public_subnets[0]
@@ -51,9 +35,9 @@ resource "aws_instance" "app" {
   associate_public_ip_address = true
   key_name                    = var.ssh_key_name
 
-  user_data = file("../../scripts/entry-script.sh")
+  user_data = var.use_entry_script ? file("../../scripts/entry-script.sh") : null
 
-  user_data_replace_on_change = true
+  user_data_replace_on_change = var.use_entry_script
 
   tags = local.tags
 }

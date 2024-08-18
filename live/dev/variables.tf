@@ -43,3 +43,10 @@ variable "ecr_names" {
   default     = []
 }
 
+variable "ec2s" {
+  type = list(object({
+    name             = string
+    image            = string
+    use_entry_script = bool
+  }))
+}
