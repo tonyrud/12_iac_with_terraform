@@ -40,4 +40,9 @@ resource "aws_instance" "app" {
   user_data_replace_on_change = var.use_entry_script
 
   tags = local.tags
+
+  provisioner "local-exec" {
+    working_dir = "/Users/tonyrudny/Developer/DevOps/techdegree-with-nana/15_ansible/playbooks"
+    command = "ansible-playbook -i ${self.public_ip}, -u ec2-user --private-key ${var.private_key_location} docker.yaml"
+  }
 }

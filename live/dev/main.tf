@@ -87,9 +87,10 @@ module "ec2" {
   for_each = { for each in var.ec2s : each.name => each }
   source   = "../../modules/ec2"
 
-  public_subnets = module.vpc.public_subnets
-  default_sg     = aws_default_security_group.default-sg
-  ssh_key_name   = aws_key_pair.ssh-key.key_name
+  public_subnets       = module.vpc.public_subnets
+  default_sg           = aws_default_security_group.default-sg
+  ssh_key_name         = aws_key_pair.ssh-key.key_name
+  private_key_location = var.private_key_location
 
   # usage of tfvars list of objects
   instance_name    = each.value.name

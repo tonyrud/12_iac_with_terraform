@@ -26,6 +26,7 @@ variable "public_subnet_cidr_blocks" {
 
 variable "my_ip" {}
 variable "public_key_location" {}
+variable "private_key_location" {}
 
 variable "create_k8s_cluster" {
   type = bool
