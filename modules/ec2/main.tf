@@ -41,8 +41,10 @@ resource "aws_instance" "app" {
 
   tags = local.tags
 
-  provisioner "local-exec" {
-    working_dir = "/Users/tonyrudny/Developer/DevOps/techdegree-with-nana/15_ansible/playbooks"
-    command = "ansible-playbook -i ${self.public_ip}, -u ec2-user --private-key ${var.private_key_location} docker.yaml"
-  }
+  # provison locally with ansible
+  # turned off to test dynamic inventory in ansible repo
+  # provisioner "local-exec" {
+  #   working_dir = "/Users/tonyrudny/Developer/DevOps/techdegree-with-nana/15_ansible/playbooks"
+  #   command = "ansible-playbook -i ${self.public_ip}, -u ec2-user --private-key ${var.private_key_location} docker.yaml"
+  # }
 }
