@@ -26,7 +26,10 @@ variable "public_subnet_cidr_blocks" {
 
 variable "my_ip" {}
 variable "public_key_location" {}
-variable "private_key_location" {}
+variable "private_key_location" {
+  description = "Location of the private key. This is only used for Ansible to make local exec calls"
+  type        = string
+}
 
 variable "create_k8s_cluster" {
   type = bool
