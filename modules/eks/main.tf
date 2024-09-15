@@ -1,3 +1,5 @@
+#!! NOTE: If you create a load balancer, you will need to manually delete it in AWS Console !!
+# This will then require you to manually delete the VPC as well
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "20.8.5"
