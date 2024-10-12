@@ -96,6 +96,7 @@ module "ec2" {
   instance_name    = each.value.name
   image            = each.value.image
   use_entry_script = each.value.use_entry_script
+  install_docker   = each.value.install_docker
 }
 
 module "eks" {

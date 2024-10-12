@@ -14,3 +14,8 @@ variable "use_entry_script" {
   type    = bool
   default = false
 }
+
+variable "install_docker" {
+  type    = bool
+  default = false
+}

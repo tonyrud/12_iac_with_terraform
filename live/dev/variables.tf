@@ -46,5 +46,6 @@ variable "ec2s" {
     name             = string
     image            = string
     use_entry_script = bool
+    install_docker   = bool
   }))
 }

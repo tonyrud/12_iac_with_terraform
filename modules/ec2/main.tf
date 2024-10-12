@@ -35,9 +35,9 @@ resource "aws_instance" "app" {
   associate_public_ip_address = true
   key_name                    = var.ssh_key_name
 
-  user_data = var.use_entry_script ? file("../../scripts/entry-script.sh") : null
+  user_data = var.use_entry_script ? file("../../scripts/entry-script.sh") : var.install_docker ? file("../../scripts/install_docker.sh") : null
 
-  user_data_replace_on_change = var.use_entry_script
+  user_data_replace_on_change = var.use_entry_script || var.install_docker
 
   tags = local.tags
 
