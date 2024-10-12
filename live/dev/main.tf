@@ -38,13 +38,20 @@ resource "aws_default_security_group" "default-sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
+    cidr_blocks = [var.my_ip, "0.0.0.0/0"]
   }
 
   # open port 8080 for the app
   ingress {
     from_port   = 8080
     to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -97,6 +104,8 @@ module "ec2" {
   image            = each.value.image
   use_entry_script = each.value.use_entry_script
   install_docker   = each.value.install_docker
+  volume_size      = each.value.volume_size
+  instance_type    = each.value.instance_type
 }
 
 module "eks" {

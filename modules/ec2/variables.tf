@@ -1,7 +1,11 @@
-variable "ec2_instance_type" {
+variable "instance_type" {
   description = "Instance type for EC2 instances"
   type        = string
-  default     = "t2.micro"
+}
+
+variable "volume_size" {
+  description = "EBS volume size in GB"
+  type        = number
 }
 
 variable "default_sg" {}

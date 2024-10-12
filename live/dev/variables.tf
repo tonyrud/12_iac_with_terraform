@@ -45,7 +45,9 @@ variable "ec2s" {
   type = list(object({
     name             = string
     image            = string
-    use_entry_script = bool
-    install_docker   = bool
+    instance_type    = optional(string, "t2.micro")
+    volume_size      = optional(number, 8)
+    use_entry_script = optional(bool, false)
+    install_docker   = optional(bool, false)
   }))
 }

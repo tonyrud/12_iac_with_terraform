@@ -26,11 +26,15 @@ data "aws_availability_zones" "available" {
 
 resource "aws_instance" "app" {
   ami           = data.aws_ami.image.id
-  instance_type = var.ec2_instance_type
+  instance_type = var.instance_type
 
   subnet_id                = var.public_subnets[0]
   vpc_security_group_ids = [var.default_sg.id]
   availability_zone      = data.aws_availability_zones.available.names[0]
+
+  root_block_device {
+    volume_size = var.volume_size
+  }
 
   associate_public_ip_address = true
   key_name                    = var.ssh_key_name
