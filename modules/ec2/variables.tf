@@ -14,6 +14,7 @@ variable "ssh_key_name" {}
 variable "private_key_location" {}
 variable "public_subnets" {}
 variable "image" {}
+variable "instance_profile" {}
 variable "use_entry_script" {
   type    = bool
   default = false

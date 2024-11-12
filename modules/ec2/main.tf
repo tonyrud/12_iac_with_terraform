@@ -28,6 +28,8 @@ resource "aws_instance" "app" {
   ami           = data.aws_ami.image.id
   instance_type = var.instance_type
 
+  iam_instance_profile = var.instance_profile
+
   subnet_id                = var.public_subnets[0]
   vpc_security_group_ids = [var.default_sg.id]
   availability_zone      = data.aws_availability_zones.available.names[0]
