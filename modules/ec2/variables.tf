@@ -11,7 +11,6 @@ variable "volume_size" {
 variable "default_sg" {}
 variable "instance_name" {}
 variable "ssh_key_name" {}
-variable "private_key_location" {}
 variable "public_subnets" {}
 variable "image" {}
 variable "instance_profile" {}

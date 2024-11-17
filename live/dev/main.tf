@@ -38,7 +38,7 @@ resource "aws_default_security_group" "default-sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip, "0.0.0.0/0"]
+    cidr_blocks = [var.my_ip]
   }
 
   # open port 8080 for the app
@@ -94,12 +94,11 @@ module "ec2" {
   for_each = { for each in var.ec2s : each.name => each }
   source   = "../../modules/ec2"
 
-  public_subnets       = module.vpc.public_subnets
-  default_sg           = aws_default_security_group.default-sg
-  ssh_key_name         = aws_key_pair.ssh-key.key_name
-  private_key_location = var.private_key_location
+  public_subnets = module.vpc.public_subnets
+  default_sg     = aws_default_security_group.default-sg
+  ssh_key_name   = aws_key_pair.ssh-key.key_name
 
-  instance_profile = aws_iam_instance_profile.test_profile.name
+  instance_profile = module.iam_role.app-server-role.name
 
   # usage of tfvars list of objects
   instance_name    = each.value.name
@@ -118,34 +117,8 @@ module "eks" {
   private_subnets = module.vpc.private_subnets
 }
 
-# TODO make module for this
-resource "aws_iam_role" "test_role" {
-  name = "app_server_role"
+# TODO: make this more dynamic and configurable
+module "iam_role" {
+  source = "../../modules/iam/roles"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
-
-# this gets assigned to the instance
-resource "aws_iam_instance_profile" "test_profile" {
-  name = "test_profile"
-  role = aws_iam_role.test_role.name
-}
-
-resource "aws_iam_role_policy" "ssm_policy" {
-  name = "ssm_policy"
-  role = aws_iam_role.test_role.id
-
-  policy = file("../../modules/iam/role/ssm_policy.json")
 }
