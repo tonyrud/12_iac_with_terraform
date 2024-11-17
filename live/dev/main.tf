@@ -99,7 +99,7 @@ module "ec2" {
   ssh_key_name         = aws_key_pair.ssh-key.key_name
   private_key_location = var.private_key_location
 
-  instance_profile = aws_iam_instance_profile.test_profile.name
+  instance_profile = module.iam_role.app-server-role.name
 
   # usage of tfvars list of objects
   instance_name    = each.value.name
@@ -118,34 +118,8 @@ module "eks" {
   private_subnets = module.vpc.private_subnets
 }
 
-# TODO make module for this
-resource "aws_iam_role" "test_role" {
-  name = "app_server_role"
+# TODO: make this more dynamic and configurable
+module "iam_role" {
+  source = "../../modules/iam/role"
 
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Sid    = ""
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      },
-    ]
-  })
-}
-
-# this gets assigned to the instance
-resource "aws_iam_instance_profile" "test_profile" {
-  name = "test_profile"
-  role = aws_iam_role.test_role.name
-}
-
-resource "aws_iam_role_policy" "ssm_policy" {
-  name = "ssm_policy"
-  role = aws_iam_role.test_role.id
-
-  policy = file("../../modules/iam/role/ssm_policy.json")
 }
