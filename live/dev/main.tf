@@ -38,7 +38,7 @@ resource "aws_default_security_group" "default-sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip, "0.0.0.0/0"]
+    cidr_blocks = [var.my_ip]
   }
 
   # open port 8080 for the app
@@ -94,10 +94,9 @@ module "ec2" {
   for_each = { for each in var.ec2s : each.name => each }
   source   = "../../modules/ec2"
 
-  public_subnets       = module.vpc.public_subnets
-  default_sg           = aws_default_security_group.default-sg
-  ssh_key_name         = aws_key_pair.ssh-key.key_name
-  private_key_location = var.private_key_location
+  public_subnets = module.vpc.public_subnets
+  default_sg     = aws_default_security_group.default-sg
+  ssh_key_name   = aws_key_pair.ssh-key.key_name
 
   instance_profile = module.iam_role.app-server-role.name
 
