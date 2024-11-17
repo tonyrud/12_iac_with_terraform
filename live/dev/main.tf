@@ -120,6 +120,6 @@ module "eks" {
 
 # TODO: make this more dynamic and configurable
 module "iam_role" {
-  source = "../../modules/iam/role"
+  source = "../../modules/iam/roles"
 
 }
