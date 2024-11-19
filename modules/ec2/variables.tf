@@ -14,12 +14,8 @@ variable "ssh_key_name" {}
 variable "public_subnets" {}
 variable "image" {}
 variable "instance_profile" {}
-variable "use_entry_script" {
-  type    = bool
-  default = false
-}
 
-variable "install_docker" {
-  type    = bool
-  default = false
+variable "entry_script" {
+  type    = string
+  default = ""
 }

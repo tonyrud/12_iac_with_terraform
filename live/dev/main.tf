@@ -101,12 +101,11 @@ module "ec2" {
   instance_profile = module.iam_role.app-server-role.name
 
   # usage of tfvars list of objects
-  instance_name    = each.value.name
-  image            = each.value.image
-  use_entry_script = each.value.use_entry_script
-  install_docker   = each.value.install_docker
-  volume_size      = each.value.volume_size
-  instance_type    = each.value.instance_type
+  instance_name = each.value.name
+  image         = each.value.image
+  entry_script  = each.value.entry_script
+  volume_size   = each.value.volume_size
+  instance_type = each.value.instance_type
 }
 
 module "eks" {
