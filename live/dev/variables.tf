@@ -24,11 +24,16 @@ variable "public_subnet_cidr_blocks" {
   type        = list(string)
 }
 
-variable "my_ip" {}
+variable "my_ip" {
+  description = "My IP address"
+  type        = string
+}
+
 variable "public_key_location" {}
 
 variable "create_k8s_cluster" {
-  type = bool
+  type    = bool
+  default = false
 }
 
 variable "ecr_names" {
