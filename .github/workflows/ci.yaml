@@ -10,9 +10,15 @@ on:
       - main
 
 env:
-  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
-  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
-  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+  # Secrets
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+
+  # Variables
+  TF_VAR_region: ${{ secrets.AWS_DEFAULT_REGION }}
+  TF_VAR_bucket_name: ${{ secrets.TF_VAR_bucket_name }}
+  WORKING_DIR: live/dev
 
 
 jobs:
@@ -30,14 +36,18 @@ jobs:
           terraform_version: 1.0.0
 
       - name: Terraform Init
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform init
 
       - name: Terraform Validate
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform validate
 
       - name: Terraform Plan
+        working-directory: ${{ env.WORKING_DIR }}
         run: terraform plan
 
       # - name: Terraform Apply
       #   if: github.ref == 'refs/heads/main'
+      #   working-directory: ${{ env.WORKING_DIR }}
       #   run: terraform apply -auto-approve
