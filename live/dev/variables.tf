@@ -39,10 +39,10 @@ variable "ecr_names" {
 
 variable "ec2s" {
   type = list(object({
-    name             = string
-    image            = string
-    instance_type    = optional(string, "t2.micro")
-    volume_size      = optional(number, 8)
-    entry_script     = optional(string, "")
+    name          = string
+    image         = string
+    instance_type = optional(string, "t2.micro")
+    volume_size   = optional(number, 8)
+    entry_script  = optional(string, "")
   }))
 }
