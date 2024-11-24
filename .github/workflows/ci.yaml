@@ -62,10 +62,12 @@ jobs:
             .terraform/
 
       - name: Terraform Format
-        run: terraform fmt -check
+        run: |
+          terraform fmt -check
 
       - name: Terraform Validate
-        run: terraform validate
+        run: |
+          terraform validate
 
       - name: tfsec
         uses: aquasecurity/tfsec-action@v1.0.0
@@ -82,9 +84,9 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          ls -la
           terraform plan -out=tfplan
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply -auto-approve tfplan
+        run: |
+          terraform apply -auto-approve tfplan
