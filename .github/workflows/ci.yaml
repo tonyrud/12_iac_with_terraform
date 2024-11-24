@@ -54,17 +54,19 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: terraform-init
+          name: terraform-init-artifacts
           path: |
-            ${{ env.WORKING_DIR }}/.terraform.lock.hcl
-            ${{ env.WORKING_DIR }}/.terraform/*
+            .terraform.lock.hcl
+            .terraform/
 
 
       - name: Terraform Validate
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -out=tfplan
+        run: |
+          ls -la
+          terraform plan -out=tfplan
 
       # - name: Terraform Apply
       #   if: github.ref == 'refs/heads/main'
