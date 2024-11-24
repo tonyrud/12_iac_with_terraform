@@ -29,7 +29,10 @@ variable "my_ip" {
   type        = string
 }
 
-variable "public_key_location" {}
+variable "public_key" {
+  description = "Public key for SSH access"
+  type        = string
+}
 
 variable "create_k8s_cluster" {
   type    = bool
