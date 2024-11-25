@@ -24,11 +24,19 @@ variable "public_subnet_cidr_blocks" {
   type        = list(string)
 }
 
-variable "my_ip" {}
-variable "public_key_location" {}
+variable "my_ip" {
+  description = "My IP address"
+  type        = string
+}
+
+variable "public_key" {
+  description = "Public key for SSH access"
+  type        = string
+}
 
 variable "create_k8s_cluster" {
-  type = bool
+  type    = bool
+  default = false
 }
 
 variable "ecr_names" {
@@ -39,10 +47,10 @@ variable "ecr_names" {
 
 variable "ec2s" {
   type = list(object({
-    name             = string
-    image            = string
-    instance_type    = optional(string, "t2.micro")
-    volume_size      = optional(number, 8)
-    entry_script     = optional(string, "")
+    name          = string
+    image         = string
+    instance_type = optional(string, "t2.micro")
+    volume_size   = optional(number, 8)
+    entry_script  = optional(string, "")
   }))
 }

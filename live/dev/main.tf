@@ -1,12 +1,3 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "5.46.0"
-    }
-  }
-}
-
 locals {
   provisioning_dir = replace(
     abspath(path.root),
@@ -67,7 +58,7 @@ resource "aws_default_security_group" "default-sg" {
 
 resource "aws_key_pair" "ssh-key" {
   key_name   = "${var.vpc_name}-server-key"
-  public_key = file(var.public_key_location)
+  public_key = var.public_key
 }
 
 locals {
