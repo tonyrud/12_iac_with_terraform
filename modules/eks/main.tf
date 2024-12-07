@@ -12,12 +12,18 @@ module "eks" {
   subnet_ids = var.private_subnets
   vpc_id     = var.vpc_id
 
+  cluster_addons = {
+    kube-proxy = {}
+    vpc-cni    = {}
+    coredns = {}
+  }
+
   eks_managed_node_groups = {
-    # ec2 name will be the key value
-    dev = {
-      min_size     = 1
+    # ec2 name will be this key value
+    initial = {
+      min_size     = 2
       max_size     = 2
-      desired_size = 1
+      desired_size = 2
 
       instance_types = ["t2.micro"]
     }
