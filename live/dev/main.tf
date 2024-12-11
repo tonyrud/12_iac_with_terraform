@@ -100,7 +100,7 @@ module "ec2" {
 }
 
 module "eks" {
-  count           = var.create_k8s_cluster ? 1 : 0
+  # count           = var.create_k8s_cluster ? 1 : 0
   source          = "../../modules/eks"
   cluster_name    = "${var.vpc_name}-cluster"
   vpc_id          = module.vpc.vpc_id
