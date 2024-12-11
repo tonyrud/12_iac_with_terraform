@@ -3,14 +3,14 @@ The following 2 data resources are used get around the fact that we have to wait
 for the EKS cluster to be initialised before we can attempt to authenticate.
 */
 data "aws_eks_cluster" "this" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
   depends_on = [
     module.eks.eks_managed_node_groups,
   ]
 }
 
 data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_id
+  name = module.eks.cluster_name
   depends_on = [
     module.eks.eks_managed_node_groups,
   ]
