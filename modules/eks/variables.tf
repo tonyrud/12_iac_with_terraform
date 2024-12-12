@@ -5,3 +5,6 @@ variable "cluster_name" {
 
 variable "vpc_id" {}
 variable "private_subnets" {}
+
+variable user_for_admin_role {}
+variable user_for_dev_role {}

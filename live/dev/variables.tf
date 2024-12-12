@@ -54,3 +54,7 @@ variable "ec2s" {
     entry_script  = optional(string, "")
   }))
 }
+
+variable "user_for_admin_role" {}
+variable "user_for_dev_role" {}
+
