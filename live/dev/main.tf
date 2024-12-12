@@ -99,8 +99,8 @@ module "ec2" {
   instance_type = each.value.instance_type
 }
 
+# to remove: terraform destroy -target module.eks
 module "eks" {
-  # count           = var.create_k8s_cluster ? 1 : 0
   source          = "../../modules/eks"
   cluster_name    = "${var.vpc_name}-cluster"
   vpc_id          = module.vpc.vpc_id
