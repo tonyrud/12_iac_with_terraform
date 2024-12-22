@@ -112,7 +112,7 @@ jobs:
         run: exit 1
 
       # Apply only if the PR is merged
-      - name: Terraform Apply
-        if: ${{ github.event.pull_request.merged }}
-        run: |
-          terraform apply -auto-approve tfplan
+      # - name: Terraform Apply
+      #   if: ${{ github.event.pull_request.merged }}
+      #   run: |
+      #     terraform apply -auto-approve tfplan
