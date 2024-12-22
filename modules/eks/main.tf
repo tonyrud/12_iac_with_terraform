@@ -47,14 +47,6 @@ module "eks" {
   }
 }
 
-# module "aws_auth" {
-#   source = "terraform-aws-modules/eks/aws//modules/aws-auth"
-#   create_aws_auth_configmap = true
-#   manage_aws_auth_configmap = true
-#   aws_auth_roles = local.aws_k8s_role_mapping
-#   # aws_auth_users = var.eks_additional_users
-# }
-
 module "eks_aws_auth" {
   source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
   version = "~> 20.0"
@@ -72,12 +64,4 @@ module "eks_aws_auth" {
       groups = ["none"]
     }
   ]
-
-  # aws_auth_users = [
-  #   {
-  #     userarn  = "arn:aws:iam::66666666666:user/user1"
-  #     username = "user1"
-  #     groups   = ["custom-users-group"]
-  #   },
-  # ]
 }
