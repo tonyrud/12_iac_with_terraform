@@ -54,34 +54,30 @@ jobs:
 
       - name: Terraform Init
         id: init
-        run: |
-          terraform init
-
-      - name: ls
-        run: ls -la
+        run: terraform init
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: terraform-init-artifacts
+          include-hidden-files: true
           path: |
-            .terraform.lock.hcl
-            .terraform/
+            **/.terraform.lock.hcl
+            **/.terraform/
 
       - name: Terraform Format
         id: fmt
-        run: |
-          terraform fmt -check
+        run: terraform fmt -check
 
       - name: Terraform Validate
         id: validate
-        run: |
-          terraform validate
+        run: terraform validate
 
       - name: Terraform Plan
         id: plan
-        run: |
-          terraform plan -out=tfplan
+        # continue for the PR comment, then fail after posting
+        continue-on-error: true
+        run: terraform plan  -no-color -input=false
 
       # - name: Update Pull Request
       #   uses: actions/github-script@v7
@@ -120,5 +116,4 @@ jobs:
       # Apply only if the PR is merged
       # - name: Terraform Apply
       #   if: ${{ github.event.pull_request.merged }}
-      #   run: |
-      #     terraform apply -auto-approve tfplan
+      #   run: terraform apply -auto-approve -input=false
