@@ -1,7 +1,6 @@
 name: Terraform
 
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
@@ -121,5 +120,5 @@ jobs:
 
       # Apply only if the PR is merged
       - name: Terraform Apply
-        if: ${{ github.event.pull_request.merged }}
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
