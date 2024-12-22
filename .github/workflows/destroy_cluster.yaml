@@ -12,9 +12,13 @@ env:
   ROLE_ARN: ${{ vars.ROLE_ARN }}
 
 jobs:
-  oidc_provider:
+  terraform_destroy:
     name: Remove resources
     runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: ./live/dev
 
     steps:
       - name: Git clone the repository
