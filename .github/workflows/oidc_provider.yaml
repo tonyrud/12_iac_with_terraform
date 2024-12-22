@@ -1,0 +1,19 @@
+name: OIDC Provider Testing
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  oidc_provider:
+    name: OIDC Provider
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Test
+        run: |
+          echo "Testing OIDC Provider"
