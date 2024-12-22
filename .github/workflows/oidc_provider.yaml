@@ -5,15 +5,30 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+env:
+  AWS_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+  ROLE_ARN: ${{ vars.ROLE_ARN }}
+
 jobs:
   oidc_provider:
     name: OIDC Provider
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Git clone the repository
+        uses: actions/checkout@v4
 
-      - name: Test
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          role-session-name: samplerolesession
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Test S3
         run: |
-          echo "Testing OIDC Provider"
+          aws s3 ls
