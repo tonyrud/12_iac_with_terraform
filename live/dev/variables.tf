@@ -54,3 +54,16 @@ variable "ec2s" {
     entry_script  = optional(string, "")
   }))
 }
+
+variable "user_for_admin_role" {
+  description = "User for admin role"
+  type        = string
+  default     = "arn:aws:iam::326347646211:user/devsecops-k8s-admin"
+}
+
+variable "user_for_dev_role" {
+  description = "User for dev role"
+  type        = string
+  default     = "arn:aws:iam::326347646211:user/devsecops-k8s-developer"
+}
+

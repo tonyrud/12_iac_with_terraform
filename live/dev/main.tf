@@ -99,16 +99,20 @@ module "ec2" {
   instance_type = each.value.instance_type
 }
 
+
+
+# to remove: terraform destroy -target module.eks
 module "eks" {
-  count           = var.create_k8s_cluster ? 1 : 0
   source          = "../../modules/eks"
   cluster_name    = "${var.vpc_name}-cluster"
   vpc_id          = module.vpc.vpc_id
   private_subnets = module.vpc.private_subnets
+
+  user_for_admin_role = var.user_for_admin_role
+  user_for_dev_role   = var.user_for_dev_role
 }
 
 # TODO: make this more dynamic and configurable
 module "iam_role" {
   source = "../../modules/iam/roles"
-
 }

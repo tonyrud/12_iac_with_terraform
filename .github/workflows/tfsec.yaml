@@ -1,0 +1,25 @@
+name: tfsec-pr-commenter
+
+on:
+  pull_request:
+
+jobs:
+  tfsec:
+    name: tfsec PR commenter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@master
+
+      - name: tfsec
+        uses: aquasecurity/tfsec-pr-commenter-action@v1.2.0
+        with:
+          tfsec_formats: json
+          github_token: ${{ github.token }}
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfsec-results
+          path: tfsec-results.json
