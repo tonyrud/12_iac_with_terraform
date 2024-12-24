@@ -35,8 +35,9 @@ variable "public_key" {
 }
 
 variable "create_k8s_cluster" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Create EKS cluster"
+  default     = false
 }
 
 variable "ecr_names" {

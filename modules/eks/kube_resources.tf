@@ -9,18 +9,11 @@ data "aws_eks_cluster" "this" {
   ]
 }
 
-data "aws_eks_cluster_auth" "this" {
-  name = module.eks.cluster_name
-  depends_on = [
-    module.eks.eks_managed_node_groups,
-  ]
-}
-
 # allows creating k8s cluster roles
 # see /modules/eks/kube_resources.tf
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.this.endpoint
-  token                  = data.aws_eks_cluster_auth.this.token
+  token                  = data.aws_eks_cluster.this.token
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
   exec {
     api_version = "client.authentication.k8s.io/v1beta1"
