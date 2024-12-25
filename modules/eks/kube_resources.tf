@@ -2,25 +2,25 @@
 The following 2 data resources are used get around the fact that we have to wait
 for the EKS cluster to be initialised before we can attempt to authenticate.
 */
-data "aws_eks_cluster" "this" {
-  name = module.eks.cluster_name
-  depends_on = [
-    module.eks.eks_managed_node_groups,
-  ]
-}
+# data "aws_eks_cluster" "this" {
+#   name = module.eks.cluster_name
+#   depends_on = [
+#     module.eks.eks_managed_node_groups,
+#   ]
+# }
 
-# allows creating k8s cluster roles
-# see /modules/eks/kube_resources.tf
-provider "kubernetes" {
-  host                   = data.aws_eks_cluster.this.endpoint
-  token                  = data.aws_eks_cluster.this.token
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
-  exec {
-    api_version = "client.authentication.k8s.io/v1beta1"
-    command     = "aws"
-    args        = ["eks", "get-token", "--cluster-name",  module.eks.cluster_name]
-  }
-}
+# # allows creating k8s cluster roles
+# # see /modules/eks/kube_resources.tf
+# provider "kubernetes" {
+#   host                   = data.aws_eks_cluster.this.endpoint
+#   token                  = data.aws_eks_cluster.this.token
+#   cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
+#   exec {
+#     api_version = "client.authentication.k8s.io/v1beta1"
+#     command     = "aws"
+#     args        = ["eks", "get-token", "--cluster-name",  module.eks.cluster_name]
+#   }
+# }
 
 
 resource "kubernetes_namespace" "online-boutique" {
