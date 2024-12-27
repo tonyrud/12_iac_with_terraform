@@ -35,9 +35,8 @@ variable "public_key" {
 }
 
 variable "create_k8s_cluster" {
-  type        = bool
-  description = "Create EKS cluster"
-  default     = false
+  type    = bool
+  default = false
 }
 
 variable "ecr_names" {
@@ -66,10 +65,5 @@ variable "user_for_dev_role" {
   description = "User for dev role"
   type        = string
   default     = "arn:aws:iam::326347646211:user/devsecops-k8s-developer"
-}
-
-variable "cluster_name" {
-  description = "Name for the Cluster"
-  type        = string
 }
 
