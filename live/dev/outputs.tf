@@ -12,12 +12,12 @@ output "ec2s" {
   }]
 }
 
-output "k8s_cluster" {
-  description = "The name of the EKS cluster"
+# output "k8s_cluster" {
+#   description = "The name of the EKS cluster"
 
-  value = {
-    cluster_name      = module.eks.cluster_name
-    configure_kubectl = module.eks.configure_kubectl
-    cluster_endpoint  = module.eks.cluster_endpoint
-  }
-}
+#   value = {
+#     cluster_name      = module.eks.cluster_name
+#     configure_kubectl = module.eks.configure_kubectl
+#     cluster_endpoint  = module.eks.cluster_endpoint
+#   }
+# }
