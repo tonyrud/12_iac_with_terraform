@@ -47,21 +47,21 @@ module "eks" {
   }
 }
 
-# module "eks_aws_auth" {
-#   source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
-#   version = "~> 20.0"
+module "eks_aws_auth" {
+  source  = "terraform-aws-modules/eks/aws//modules/aws-auth"
+  version = "~> 20.0"
 
-#   manage_aws_auth_configmap = true
+  manage_aws_auth_configmap = true
 
-#   aws_auth_roles =   [{
-#       rolearn = aws_iam_role.external-admin.arn
-#       username = "admin"
-#       groups = ["none"]
-#     },
-#     {
-#       rolearn = aws_iam_role.external-developer.arn
-#       username = "developer"
-#       groups = ["none"]
-#     }
-#   ]
-# }
+  aws_auth_roles =   [{
+      rolearn = aws_iam_role.external-admin.arn
+      username = "admin"
+      groups = ["none"]
+    },
+    {
+      rolearn = aws_iam_role.external-developer.arn
+      username = "developer"
+      groups = ["none"]
+    }
+  ]
+}
