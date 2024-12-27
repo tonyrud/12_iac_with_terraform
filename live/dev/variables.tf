@@ -68,3 +68,8 @@ variable "user_for_dev_role" {
   default     = "arn:aws:iam::326347646211:user/devsecops-k8s-developer"
 }
 
+variable "cluster_name" {
+  description = "Name for the Cluster"
+  type        = string
+}
+
