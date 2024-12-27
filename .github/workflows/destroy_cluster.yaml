@@ -1,40 +1,66 @@
-name: Destroy Cluster
-
+name: Destroy Terraform
+# TODO
 on:
   workflow_dispatch:
 
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
+  pull-requests: write
+
+concurrency:
+  group: ${{github.ref}}
+  cancel-in-progress: true
 
 env:
+  # Secrets
+  TF_VAR_my_ip: ${{ secrets.TF_VAR_MY_IP }}
+  TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
+
+  # Variables
   AWS_REGION: ${{ vars.AWS_DEFAULT_REGION }}
+  TF_VAR_region: ${{ vars.AWS_DEFAULT_REGION }}
   ROLE_ARN: ${{ vars.ROLE_ARN }}
+  TF_VAR_ec2s: ${{ vars.EC2S }}
+  TF_VAR_vpc_name: devsecops-cicd
+  TF_VAR_vpc_cidr: '10.0.0.0/16'
+  TF_VAR_private_subnet_cidr_blocks: '["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]'
+  TF_VAR_public_subnet_cidr_blocks: '["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]'
+  WORKING_DIR: ./live/dev
 
 jobs:
-  oidc_provider:
-    name: Remove Cluster
+  terraform:
+    name: 'Terraform'
     runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    defaults:
+      run:
+        working-directory: ${{ env.WORKING_DIR }}
 
     steps:
-      - name: Git clone the repository
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.6.5
 
-      - name: Terraform Init
-        id: init
-        run: terraform init
-
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.ROLE_ARN }}
-          role-session-name: samplerolesession
+          role-session-name: terraform-cidi-session
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Test S3
-        run: terraform destroy -target module.eks
+      - name: Terraform Init
+        id: init
+        run: terraform init
+
+      - name: Terraform Plan
+        id: plan
+        run: terraform plan  -no-color -input=false
+
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -input=false

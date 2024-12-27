@@ -61,15 +61,6 @@ jobs:
         id: init
         run: terraform init
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-init-artifacts
-          include-hidden-files: true
-          path: |
-            ${{ env.WORKING_DIR }}/.terraform.lock.hcl
-            ${{ env.WORKING_DIR }}/.terraform/
-
       - name: Terraform Format
         id: fmt
         run: terraform fmt -check
