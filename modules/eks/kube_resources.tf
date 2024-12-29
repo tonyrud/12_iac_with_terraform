@@ -95,7 +95,7 @@ resource "kubernetes_cluster_role" "cluster_viewer" {
   }
 
   rule {
-    api_groups = [""]
+    api_groups = ["*"]
     resources  = ["*"]
     verbs      = ["get", "list", "watch", "describe"]
   }
