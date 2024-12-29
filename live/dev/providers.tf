@@ -8,7 +8,10 @@ terraform {
       source  = "hashicorp/kubernetes"
       version = ">= 2.20"
     }
-
+    helm = {
+      source = "hashicorp/helm"
+      version = "2.12.1"
+    }
   }
   backend "s3" {
     bucket = "326347646211-us-east-2-devsecops-tf-bucket"
