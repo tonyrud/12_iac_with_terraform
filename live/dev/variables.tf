@@ -45,6 +45,7 @@ variable "ecr_names" {
   default     = []
 }
 
+# TODO: set defaults for these variables and remove action variables
 variable "ec2s" {
   type = list(object({
     name          = string
