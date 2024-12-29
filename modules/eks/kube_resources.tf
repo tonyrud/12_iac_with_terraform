@@ -50,6 +50,7 @@ resource "kubernetes_namespace" "online-boutique" {
   }
 }
 
+# k8s roles are always linked to a namespace
 resource "kubernetes_role" "namespace-viewer" {
   metadata {
     name = "namespace-viewer"
@@ -69,6 +70,7 @@ resource "kubernetes_role" "namespace-viewer" {
   }
 }
 
+# links the role to a user or group
 resource "kubernetes_role_binding" "namespace-viewer" {
   metadata {
     name      = "namespace-viewer"
@@ -86,13 +88,14 @@ resource "kubernetes_role_binding" "namespace-viewer" {
   }
 }
 
+# cluster roles are not linked to a namespace and have cluster-wide permissions
 resource "kubernetes_cluster_role" "cluster_viewer" {
   metadata {
     name = "cluster-viewer"
   }
 
   rule {
-    api_groups = [""]
+    api_groups = ["*"]
     resources  = ["*"]
     verbs      = ["get", "list", "watch", "describe"]
   }
