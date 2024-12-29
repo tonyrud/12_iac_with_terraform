@@ -54,11 +54,16 @@ If you're testing EKS creation, you manually delete the cluster with
 terraform destroy -target module.eks
 ```
 
-**NOTE: the cluster will be redeployed on next merge to main if the resource is in main.tf**
+**NOTE:
+the cluster will be redeployed on next merge to main if the resource is in main.tf**
 
 ### Testing Roles
 
 use `external-admin` or `external-developer` to test different access
+
+`export AWS_PROFILE=k8s-admin` or `export AWS_PROFILE=k8s-developer`
+
+Set current profile access via IAM assume role:
 
 ```bash
 eval $(aws sts assume-role \
