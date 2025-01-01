@@ -108,6 +108,11 @@ module "eks" {
 
   user_for_admin_role = var.user_for_admin_role
   user_for_dev_role   = var.user_for_dev_role
+
+  # Argo CD vars
+  gitops_url      = var.gitops_url
+  gitops_username = var.gitops_username
+  gitops_password = var.gitops_password
 }
 
 # TODO: make this more dynamic and configurable
