@@ -96,6 +96,13 @@ module "eks_blueprints_addons" {
     ]
   }
 
+  aws_load_balancer_controller = {
+    set = [{
+      name  = "enableServiceMutatorWebhook"
+      value = "false"
+    }]
+  }
+
   # enable_argocd                        = true
   # enable_argo_rollouts                 = true
 
