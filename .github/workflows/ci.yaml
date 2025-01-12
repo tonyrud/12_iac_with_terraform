@@ -118,11 +118,13 @@ jobs:
         run: terraform apply -auto-approve -input=false
 
   # Add ArgoCD Application
-  deploy_to_test:
+  deploy_argocd:
+    name: 'Deploy ArgoCD Manifest'
     runs-on: ubuntu-latest
     container:
-      image: bearengineer/awscli-kubectl:latest
+      image: bitnami/kubectl:latest
     needs: terraform
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
