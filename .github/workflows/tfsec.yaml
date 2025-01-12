@@ -1,4 +1,5 @@
 name: tfsec-pr-commenter
+# Checks Terrafom code for security issues and posts the results as a comment on the PR
 
 on:
   pull_request:

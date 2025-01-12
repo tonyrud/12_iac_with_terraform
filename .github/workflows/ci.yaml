@@ -116,3 +116,22 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+
+  # Add ArgoCD Application
+  deploy_to_test:
+    runs-on: ubuntu-latest
+    container:
+      image: bearengineer/awscli-kubectl:latest
+    needs: terraform
+    steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          role-session-name: kubectl-cd-session
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Deploy with SSM
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster
+          export KUBE_CONFIG_PATH=/root/.kube/config
+          kubectl apply -f online-boutique-argo-app.yaml
