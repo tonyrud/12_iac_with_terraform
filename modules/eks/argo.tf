@@ -12,7 +12,7 @@ provider "helm" {
 }
 
 resource "helm_release" "argocd" {
-  name             = "argocd"
+  name             = "argo-cd"
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
   version          = "6.4.0"
