@@ -16,10 +16,13 @@ env:
   # Secrets
   TF_VAR_my_ip: ${{ secrets.TF_VAR_MY_IP }}
   TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
+  TF_VAR_gitops_username: ${{ secrets.GITOPS_USERNAME }}
+  TF_VAR_gitops_password: ${{ secrets.GITOPS_PASSWORD }}
 
   # Variables
   AWS_REGION: ${{ vars.AWS_DEFAULT_REGION }}
   TF_VAR_region: ${{ vars.AWS_DEFAULT_REGION }}
+  TF_VAR_gitops_url: https://github.com/tonyrud/devsecops-online-boutique-k8s
   ROLE_ARN: ${{ vars.ROLE_ARN }}
   TF_VAR_ec2s: ${{ vars.EC2S }}
   TF_VAR_vpc_name: devsecops-cicd
