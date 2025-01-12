@@ -28,22 +28,6 @@ provider "kubernetes" {
     args        = ["eks", "get-token", "--cluster-name",  module.eks.cluster_name]
   }
 }
-
-provider "helm" {
-  kubernetes {
-    host                   = data.aws_eks_cluster.this.endpoint
-    token                  = data.aws_eks_cluster_auth.this.token
-    cluster_ca_certificate = base64decode(data.aws_eks_cluster.this.certificate_authority.0.data)
-    exec {
-      api_version = "client.authentication.k8s.io/v1beta1"
-      command     = "aws"
-      args        = ["eks", "get-token", "--cluster-name",  module.eks.cluster_name]
-    }
-  }
-}
-
-
-
 resource "kubernetes_namespace" "online-boutique" {
   metadata {
     name = "online-boutique"
@@ -99,6 +83,13 @@ resource "kubernetes_cluster_role" "cluster_viewer" {
     resources  = ["*"]
     verbs      = ["get", "list", "watch", "describe"]
   }
+
+  rule {
+    api_groups = [""]
+    resources = ["pods/portforward"]
+    verbs = ["get", "list", "create"]
+  }
+
 }
 
 resource "kubernetes_cluster_role_binding" "cluster_viewer" {

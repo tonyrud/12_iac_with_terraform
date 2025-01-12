@@ -19,12 +19,15 @@ env:
   # Secrets
   TF_VAR_my_ip: ${{ secrets.TF_VAR_MY_IP }}
   TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
+  TF_VAR_gitops_username: ${{ secrets.GITOPS_USERNAME }}
+  TF_VAR_gitops_password: ${{ secrets.GITOPS_PASSWORD }}
 
   # Variables
   AWS_REGION: ${{ vars.AWS_DEFAULT_REGION }}
-  TF_VAR_region: ${{ vars.AWS_DEFAULT_REGION }}
   ROLE_ARN: ${{ vars.ROLE_ARN }}
+  TF_VAR_region: ${{ vars.AWS_DEFAULT_REGION }}
   TF_VAR_ec2s: ${{ vars.EC2S }}
+  TF_VAR_gitops_url: https://github.com/tonyrud/devsecops-online-boutique-k8s
   TF_VAR_vpc_name: devsecops-cicd
   TF_VAR_vpc_cidr: '10.0.0.0/16'
   TF_VAR_private_subnet_cidr_blocks: '["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]'
@@ -35,7 +38,7 @@ jobs:
   terraform:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
 
     defaults:
       run:
@@ -113,3 +116,24 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
+
+  # Add ArgoCD Application
+  deploy_argocd:
+    name: 'Deploy ArgoCD Manifest'
+    runs-on: ubuntu-latest
+    container:
+      image: bitnami/kubectl:latest
+    needs: terraform
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.ROLE_ARN }}
+          role-session-name: kubectl-cd-session
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Deploy with SSM
+        run: |
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster
+          export KUBE_CONFIG_PATH=/root/.kube/config
+          kubectl apply -f online-boutique-argo-app.yaml

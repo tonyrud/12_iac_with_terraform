@@ -72,3 +72,17 @@ eval $(aws sts assume-role \
 ```
 
 Using `kubens`, you can switch to `online-boutique` and check pods, svc, etc. No deployments are running in the default config.
+
+### Kube Metrics Server
+
+See Node usage
+
+```bash
+kubectl top node
+```
+
+pods usage
+
+```bash
+kubectl top pod -A
+```
