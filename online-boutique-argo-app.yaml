@@ -3,7 +3,7 @@ kind: Application
 metadata:
   name: online-boutique
   namespace: argocd
-  
+
 spec:
   project: default
   destination:
@@ -19,3 +19,9 @@ spec:
       selfHeal: true
     syncOptions:
     - CreateNamespace=true
+    - RespectIgnoreDifferences=true
+  ignoreDifferences:
+  - group: "apps"
+    kind: "Deployment"
+    jsonPointers:
+    - /spec/replicas
