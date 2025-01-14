@@ -97,4 +97,8 @@ Get argocd web ui password
 kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
+Port forward Argo Web UI
 
+```bash
+kubectl port-forward -n argocd pods/argocd-server-<id> 8080:8080
+```
