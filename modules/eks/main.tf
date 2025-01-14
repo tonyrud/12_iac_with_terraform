@@ -38,12 +38,13 @@ module "eks" {
   eks_managed_node_groups = {
     # ec2 name will be this key value
     initial = {
+      # note: must use a larger instance type when lots of apps are deployed
+      instance_types = ["t2.xlarge"]
       min_size     = 2
-      max_size     = 2
-      desired_size = 2
-
-      instance_types = ["t2.micro"]
+      max_size     = 4
+      desired_size = 4
     }
+
   }
 }
 
