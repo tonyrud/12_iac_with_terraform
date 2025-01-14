@@ -86,3 +86,15 @@ pods usage
 ```bash
 kubectl top pod -A
 ```
+
+### ArgoCD
+
+ArgoCD is installed via helm provider in Terraform
+
+Get argocd web ui password
+
+```bash
+kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+
