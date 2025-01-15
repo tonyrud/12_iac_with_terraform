@@ -1,4 +1,4 @@
-name: Terraform
+name: CI/CD Pipeline
 
 on:
   push:
@@ -116,15 +116,14 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-          export KUBE_CONFIG_PATH: /root/.kube/config
           terraform apply -auto-approve -input=false
 
   # Add ArgoCD Application
   deploy_argocd:
-    name: 'Deploy ArgoCD Manifest'
+    name: 'Deploy ArgoCD Application'
     runs-on: ubuntu-latest
     container:
-      image: bitnami/kubectl:latest
+      image: heyvaldemar/aws-kubectl:latest
     needs: terraform
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
@@ -136,7 +135,6 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: Deploy ArgoCD Repo App
         run: |
-
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster
           export KUBE_CONFIG_PATH=/root/.kube/config
           kubectl apply -f online-boutique-argo-app.yaml
