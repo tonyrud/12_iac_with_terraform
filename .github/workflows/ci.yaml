@@ -127,12 +127,16 @@ jobs:
     needs: terraform
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.ROLE_ARN }}
           role-session-name: kubectl-cd-session
           aws-region: ${{ env.AWS_REGION }}
+
       - name: Deploy ArgoCD Repo App
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster
