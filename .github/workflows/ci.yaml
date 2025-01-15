@@ -33,7 +33,6 @@ env:
   TF_VAR_private_subnet_cidr_blocks: '["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]'
   TF_VAR_public_subnet_cidr_blocks: '["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]'
   WORKING_DIR: ./live/dev
-  KUBE_CONFIG_PATH: /root/.kube/config
 
 jobs:
   terraform:
@@ -116,7 +115,9 @@ jobs:
       # Apply only if the PR is merged
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        run: terraform apply -auto-approve -input=false
+        run: |
+          export KUBE_CONFIG_PATH: /root/.kube/config
+          terraform apply -auto-approve -input=false
 
   # Add ArgoCD Application
   deploy_argocd:
@@ -133,7 +134,9 @@ jobs:
           role-to-assume: ${{ env.ROLE_ARN }}
           role-session-name: kubectl-cd-session
           aws-region: ${{ env.AWS_REGION }}
-      - name: Deploy with SSM
+      - name: Deploy ArgoCD Repo App
         run: |
+
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster
+          export KUBE_CONFIG_PATH=/root/.kube/config
           kubectl apply -f online-boutique-argo-app.yaml
