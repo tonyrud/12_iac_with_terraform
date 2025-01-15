@@ -86,3 +86,25 @@ pods usage
 ```bash
 kubectl top pod -A
 ```
+
+### ArgoCD
+
+ArgoCD deployments are installed via helm provider in Terraform
+
+See: `modules/eks/argo.tf`
+
+Get argocd web ui password
+
+```bash
+kubectl get secret -n argocd argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+Port forward Argo Web UI
+
+```bash
+kubectl port-forward -n argocd pods/argocd-server-<id> 8080:8080
+```
+
+ArgoCD repo configuration is installed as part of CI pipeline
+
+See: `online-boutique-argo-app.yaml`
