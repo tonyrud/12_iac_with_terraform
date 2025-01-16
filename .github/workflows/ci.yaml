@@ -77,8 +77,7 @@ jobs:
         # continue for the PR comment, then fail after posting
         continue-on-error: true
         run: |
-          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster || true
-          export KUBE_CONFIG_PATH=/root/.kube/config
+          export KUBE_CONFIG_PATH=.kube/config
           terraform plan -no-color -input=false
 
       - name: Update Pull Request
@@ -143,5 +142,5 @@ jobs:
       - name: Deploy ArgoCD Repo App
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster
-          export KUBE_CONFIG_PATH=/root/.kube/config
+          export KUBE_CONFIG_PATH=.kube/config
           kubectl apply -f online-boutique-argo-app.yaml
