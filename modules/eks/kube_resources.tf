@@ -32,6 +32,10 @@ resource "kubernetes_namespace" "online-boutique" {
   metadata {
     name = "online-boutique"
   }
+
+  timeouts {
+    delete = "20m"
+  }
 }
 
 # k8s roles are always linked to a namespace
