@@ -70,6 +70,7 @@ module "vpc" {
 
   vpc_name                   = var.vpc_name
   vpc_cidr                   = var.vpc_cidr
+  cluster_name               = "${var.vpc_name}-cluster"
   public_subnet_cidr_blocks  = var.public_subnet_cidr_blocks
   private_subnet_cidr_blocks = var.private_subnet_cidr_blocks
 }
