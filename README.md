@@ -105,6 +105,11 @@ Port forward Argo Web UI
 kubectl port-forward -n argocd pods/argocd-server-<id> 8080:8080
 ```
 
+Login
+
+> username: admin
+> password: <from clipboard above>
+
 ArgoCD repo configuration is installed as part of CI pipeline
 
 See: `online-boutique-argo-app.yaml`

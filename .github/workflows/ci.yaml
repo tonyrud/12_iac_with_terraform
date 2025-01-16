@@ -19,7 +19,7 @@ env:
   # Secrets
   TF_VAR_my_ip: ${{ secrets.TF_VAR_MY_IP }}
   TF_VAR_public_key: ${{ secrets.TF_VAR_PUBLIC_KEY }}
-  TF_VAR_gitops_username: ${{ secrets.GITOPS_USERNAME }}
+  TF_VAR_gitops_username: gh-access-token
   TF_VAR_gitops_password: ${{ secrets.GITOPS_PASSWORD }}
 
   # Variables
