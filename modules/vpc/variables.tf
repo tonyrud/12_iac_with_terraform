@@ -8,6 +8,11 @@ variable "vpc_cidr" {
   type        = string
 }
 
+variable "cluster_name" {
+  description = "Name for the Cluster"
+  type        = string
+}
+
 variable "private_subnet_cidr_blocks" {
   description = "Default value for private subnet CIDR blocks"
   type        = list(string)
