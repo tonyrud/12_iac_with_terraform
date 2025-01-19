@@ -97,13 +97,13 @@ jobs:
       - name: Terraform Plan
         id: plan
         # continue for the PR comment, then fail after posting
-        continue-on-error: true
+        # continue-on-error: true
         run: |
           if [[ -z "${{ env.CLUSTER_NAME }}" ]]; then
             echo "CLUSTER_NAME is not set...skipping eks update-kubeconfig"
           else
             aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
-            export KUBE_CONFIG_PATH=.kube/config
+            # export KUBE_CONFIG_PATH=.kube/config
           fi
           
           terraform plan -no-color -input=false
@@ -141,9 +141,9 @@ jobs:
               body: output
             })
 
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
+      # - name: Terraform Plan Status
+      #   if: steps.plan.outcome == 'failure'
+      #   run: exit 1
 
       # Apply only if the PR is merged
       - name: Terraform Apply
