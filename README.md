@@ -108,8 +108,30 @@ kubectl port-forward -n argocd pods/argocd-server-<id> 8080:8080
 Login
 
 > username: admin
-> password: <from clipboard above>
+> password: `from clipboard above`
 
 ArgoCD repo configuration is installed as part of CI pipeline
 
 See: `online-boutique-argo-app.yaml`
+
+### Stuck Namespaces
+
+Noticed issues with online-boutique deleting.
+
+It was related to finalizers set on the namespace settings. This snippet seemed to fix the issue:
+
+```bash
+(
+NAMESPACE=online-boutique
+kubectl proxy &
+kubectl get namespace $NAMESPACE -o json |jq '.spec = {"finalizers":[]}' >temp.json
+curl -k -H "Content-Type: application/json" -X PUT --data-binary @temp.json 127.0.0.1:8001/api/v1/namespaces/$NAMESPACE/finalize
+)
+```
+
+Find things that are stuck
+
+```bash
+kubectl api-resources --verbs=list --namespaced -o name \
+  | xargs -n 1 kubectl get --show-kind --ignore-not-found -n <namespace>
+  ```
