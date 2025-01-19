@@ -90,9 +90,11 @@ jobs:
             echo "CLUSTER_NAME is not set...skipping eks config"
           else
             aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+            export KUBE_CONFIG_PATH=$HOME/.kube/config
             kubectl get all
-            # export KUBE_CONFIG_PATH=/root/.kube/config
           fi
+
+          cat $HOME/.kube/config
           
           terraform plan -no-color -input=false
 
