@@ -81,10 +81,6 @@ jobs:
 
           echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
 
-      - run: echo ${{ steps.cluster_name.outputs.stdout }}
-      - run: echo ${{ steps.cluster_name.outputs.CLUSTER_NAME }}
-      - run: echo ${{ env.CLUSTER_NAME }}
-
       - name: Test cluster name
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
@@ -94,7 +90,13 @@ jobs:
         # continue for the PR comment, then fail after posting
         continue-on-error: true
         run: |
-          # export KUBE_CONFIG_PATH=.kube/config
+          if [[ -z "${env.CLUSTER_NAME}" ]]; then
+            echo "CLUSTER_NAME is not set...skipping eks update-kubeconfig"
+          else
+            aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+            export KUBE_CONFIG_PATH=.kube/config
+          fi
+          
           terraform plan -no-color -input=false
 
       - name: Update Pull Request
