@@ -75,13 +75,15 @@ jobs:
       - name: Cluster Name
         id: cluster_name
         run: |
-          terraform output --json k8s_cluster | jq --raw-output .cluster_name
+          terraform-bin output --json k8s_cluster | jq .cluster_name
+
+      - run: echo ${{ steps.cluster_name.outputs.stdout }}
 
       - name: Test cluster name
         env:
           CLUSTER_NAME: ${{ steps.cluster_name.outputs.stdout }}
         run: |
-          echo "Cluster Name: ${{ env.CLUSTER_NAME }}"
+          echo "Cluster Name: ${{ steps.cluster_name.outputs.stdout }}"
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
 
       - name: Terraform Plan
