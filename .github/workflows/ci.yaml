@@ -93,15 +93,23 @@ jobs:
             aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
             export KUBE_CONFIG_PATH=.kube/config
           fi
-      
+          
       - name: Terraform Plan
         id: plan
         # continue for the PR comment, then fail after posting
         continue-on-error: true
         run: |
-          echo $KUBE_CONFIG_PATH
+          if [[ -z "${{ env.CLUSTER_NAME }}" ]]; then
+            echo "CLUSTER_NAME is not set...skipping eks update-kubeconfig"
+          else
+            aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+            export KUBE_CONFIG_PATH=.kube/config
+          fi
+          
           terraform plan -no-color -input=false
 
+      # Examples: https://github.com/marketplace/actions/hashicorp-setup-terraform
+      # Has one example to replace the same comment instead of creating a new one
       - name: Update Pull Request
         uses: actions/github-script@v7
         if: false
