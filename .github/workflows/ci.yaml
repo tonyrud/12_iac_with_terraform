@@ -72,14 +72,30 @@ jobs:
         id: validate
         run: terraform validate
 
+      - name: Cluster Name
+        id: cluster_name
+        run: |
+          terraform-bin output --json k8s_cluster | jq .cluster_name
+
+          CLUSTER_NAME=$(terraform-bin output --json k8s_cluster | jq --raw-output .cluster_name)
+
+          echo "CLUSTER_NAME=$CLUSTER_NAME" >> $GITHUB_ENV
+
       - name: Terraform Plan
         id: plan
-        # continue for the PR comment, then fail after posting
-        continue-on-error: true
         run: |
-          export KUBE_CONFIG_PATH=.kube/config
+          if [[ -z "${{ env.CLUSTER_NAME }}" ]]; then
+            echo "CLUSTER_NAME is not set...skipping eks config"
+          else
+            aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+            export KUBE_CONFIG_PATH=$HOME/.kube/config
+            kubectl get all
+          fi
+
           terraform plan -no-color -input=false
 
+      # Examples: https://github.com/marketplace/actions/hashicorp-setup-terraform
+      # Has one example to replace the same comment instead of creating a new one
       - name: Update Pull Request
         uses: actions/github-script@v7
         if: github.event_name == 'pull_request'
@@ -110,10 +126,6 @@ jobs:
               body: output
             })
 
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
-
       # Apply only if the PR is merged
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -142,5 +154,5 @@ jobs:
       - name: Deploy ArgoCD Repo App
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name devsecops-cicd-cluster
-          export KUBE_CONFIG_PATH=.kube/config
+          export KUBE_CONFIG_PATH=$HOME/.kube/config
           kubectl apply -f online-boutique-argo-app.yaml

@@ -46,7 +46,19 @@ Example images
 
 An EKS Cluster can be created by uncommenting the module in `live/dev/main.tf`
 
-kubeconfig: `aws eks update-kubeconfig --name <cluster-name>`
+### NOTE for Terraform Providers
+
+To run `terraform` commands with the kubernetes providers requires this ENV var to be set:
+
+```bash
+export KUBE_CONFIG_PATH=$HOME/.kube/config
+```
+
+Set cluster context
+
+```bash
+aws eks update-kubeconfig --name $(terraform output --json k8s_cluster | jq --raw-output .cluster_name)
+```
 
 If you're testing EKS creation, you manually delete the cluster with
 
