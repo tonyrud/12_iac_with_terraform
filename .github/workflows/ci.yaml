@@ -72,6 +72,18 @@ jobs:
         id: validate
         run: terraform validate
 
+      - name: Cluster Name
+        id: cluster_name
+        run: |
+          terraform output --json k8s_cluster | jq --raw-output .cluster_name
+
+      - name: Test cluster name
+        env:
+          CLUSTER_NAME: ${{ steps.cluster_name.outputs.stdout }}
+        run: |
+          echo "Cluster Name: ${{ env.CLUSTER_NAME }}"
+          aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
+
       - name: Terraform Plan
         id: plan
         # continue for the PR comment, then fail after posting
@@ -82,7 +94,8 @@ jobs:
 
       - name: Update Pull Request
         uses: actions/github-script@v7
-        if: github.event_name == 'pull_request'
+        if: false
+        # if: github.event_name == 'pull_request'
         env:
           PLAN: ${{ steps.plan.outputs.stdout }}
         with:
