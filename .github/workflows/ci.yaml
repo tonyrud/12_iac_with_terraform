@@ -85,18 +85,21 @@ jobs:
         run: |
           aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
 
-      - name: Terraform Plan
-        id: plan
-        # continue for the PR comment, then fail after posting
-        continue-on-error: true
+      - name: Set EKS Context
         run: |
-          if [[ -z "${env.CLUSTER_NAME}" ]]; then
+          if [[ -z "${{ env.CLUSTER_NAME }}" ]]; then
             echo "CLUSTER_NAME is not set...skipping eks update-kubeconfig"
           else
             aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
             export KUBE_CONFIG_PATH=.kube/config
           fi
-          
+      
+      - name: Terraform Plan
+        id: plan
+        # continue for the PR comment, then fail after posting
+        continue-on-error: true
+        run: |
+          echo $KUBE_CONFIG_PATH
           terraform plan -no-color -input=false
 
       - name: Update Pull Request
