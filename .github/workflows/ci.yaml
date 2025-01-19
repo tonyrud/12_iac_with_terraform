@@ -91,7 +91,7 @@ jobs:
           else
             aws eks update-kubeconfig --region ${{ env.AWS_REGION }} --name ${{ env.CLUSTER_NAME }}
             kubectl get all
-            export KUBE_CONFIG_PATH=/root/.kube/config
+            # export KUBE_CONFIG_PATH=/root/.kube/config
           fi
           
           terraform plan -no-color -input=false
